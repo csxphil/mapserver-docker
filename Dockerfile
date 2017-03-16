@@ -63,6 +63,9 @@ RUN cd /build && \
     && ldconfig \
     && rm -Rf /build/mapserver
 
+# Add a conf file that will allow all origins to connect, edit conf file as needed to change available ports or origins
+COPY 000-default.conf /etc/apache2/sites-available/
+
 # Externally accessible data is by default put in /u02
 WORKDIR /u02
 VOLUME ["/u02"]
@@ -76,7 +79,7 @@ RUN  apt-get purge -y software-properties-common build-essential cmake ;\
 # Execute the gdal utilities as nobody, not root
 
 # Enable these Apache modules
-RUN  a2enmod actions cgi alias
+RUN  a2enmod actions cgi alias headers
 
 RUN chmod o+x /usr/local/bin/mapserv
 RUN ln -s /usr/local/bin/mapserv /usr/lib/cgi-bin/mapserv
